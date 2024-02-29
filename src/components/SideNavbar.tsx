@@ -7,12 +7,12 @@ import { Nav } from "./ui/nav";
 type Props = {};
 
 import {
-  ShoppingCart,
   LayoutDashboard,
   UsersRound,
-  Settings,
-  ChevronRight
+  ChevronRight,
+  RadioTower
 } from "lucide-react";
+
 import { Button } from "./ui/button";
 
 import { useWindowWidth } from "@react-hook/window-size";
@@ -50,21 +50,9 @@ export default function SideNavbar({}: Props) {
             variant: "default"
           },
           {
-            title: "Users",
-            href: "/users",
-            icon: UsersRound,
-            variant: "ghost"
-          },
-          {
-            title: "Ordrs",
-            href: "/orders",
-            icon: ShoppingCart,
-            variant: "ghost"
-          },
-          {
-            title: "Settings",
-            href: "/settings",
-            icon: Settings,
+            title: "Readings",
+            href: "/readings",
+            icon: RadioTower,
             variant: "ghost"
           }
         ]}

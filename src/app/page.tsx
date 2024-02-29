@@ -2,71 +2,84 @@
 
 import PageTitle from "@/components/PageTitle";
 import Image from "next/image";
-import { DollarSign, Users, CreditCard, Activity } from "lucide-react";
+import { DollarSign, Users, CreditCard, Activity, SatelliteDish } from "lucide-react";
 import Card, { CardContent, CardProps } from "@/components/Card";
 import BarChart from "@/components/BarChart";
 import SalesCard, { SalesProps } from "@/components/SalesCard";
+import Googlemap from "@/components/Googlemap";
 
 const cardData: CardProps[] = [
   {
-    label: "Total Revenue",
-    amount: "$45,231.89",
-    discription: "+20.1% from last month",
-    icon: DollarSign
+    label: "Antenna Height",
+    amount: "4 cm",
+    discription: "NB-IOT Antenna",
+    icon: SatelliteDish
   },
   {
-    label: "Subscriptions",
-    amount: "+2350",
-    discription: "+180.1% from last month",
-    icon: Users
+    label: "Antenna Obstruction",
+    amount: "157 cm",
+    discription: "200% Increase from last reading",
+    icon: SatelliteDish
   },
   {
-    label: "Sales",
-    amount: "+12,234",
-    discription: "+19% from last month",
-    icon: CreditCard
+    label: "Antenna Roll",
+    amount: "212.68°",
+    discription: "",
+    icon: SatelliteDish
   },
   {
-    label: "Active Now",
-    amount: "+573",
-    discription: "+201 since last hour",
-    icon: Activity
-  }
+    label: "Antenna Tilt",
+    amount: "264.85° ",
+    discription: "20% decrease from last reading",
+    icon: SatelliteDish
+  },
+  {
+    label: "Antenna Azimuth",
+    amount: "183.31°",
+    discription: "30 deg off ideal",
+    icon: SatelliteDish
+  },
 ];
 
 const uesrSalesData: SalesProps[] = [
   {
-    name: "Olivia Martin",
-    email: "olivia.martin@email.com",
-    saleAmount: "+$1,999.00"
+    name: "Antenna Obstruction",
+    email: "New obstruction",
+    saleAmount: "+200cm"
   },
   {
-    name: "Jackson Lee",
-    email: "isabella.nguyen@email.com",
-    saleAmount: "+$1,999.00"
+    name: "Antenna Azimuth Offset",
+    email: "Azimuth change",
+    saleAmount: "+150cm"
   },
   {
-    name: "Isabella Nguyen",
-    email: "isabella.nguyen@email.com",
-    saleAmount: "+$39.00"
+    name: "Antenna Tilt",
+    email: "Offset",
+    saleAmount: "+20cm"
   },
   {
-    name: "William Kim",
-    email: "will@email.com",
-    saleAmount: "+$299.00"
+    name: "Antenna Roll",
+    email: "Offset",
+    saleAmount: "-42cm"
   },
   {
-    name: "Sofia Davis",
-    email: "sofia.davis@email.com",
-    saleAmount: "+$39.00"
-  }
+    name: "Antenna Tilt",
+    email: "Offset",
+    saleAmount: "+200cm"
+  },
+  {
+    name: "Antenna Obstruction",
+    email: "New obstruction",
+    saleAmount: "+200cm"
+  },
 ];
 
 export default function Home() {
   return (
     <div className="flex flex-col gap-5  w-full">
+
       <PageTitle title="Dashboard" />
-      <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-5">
         {cardData.map((d, i) => (
           <Card
             key={i}
@@ -77,19 +90,22 @@ export default function Home() {
           />
         ))}
       </section>
+
       <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-2">
         <CardContent>
           <p className="p-4 font-semibold">Overview</p>
 
-          <BarChart />
+          <Googlemap/>
         </CardContent>
+
         <CardContent className="flex justify-between gap-4">
           <section>
-            <p>Recent Sales</p>
+            <p>Recent Alarms</p>
             <p className="text-sm text-gray-400">
-              You made 265 sales this month.
+              There are 24 alarms today.
             </p>
           </section>
+
           {uesrSalesData.map((d, i) => (
             <SalesCard
               key={i}
