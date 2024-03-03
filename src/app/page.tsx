@@ -131,12 +131,12 @@ export default function Home() {
     {
       name: "Antenna Obstruction",
       email: "New obstruction",
-      saleAmount: "+200cm"
+      saleAmount: "+20cm"
     },
     {
       name: "Antenna Azimuth Offset",
       email: "Azimuth change",
-      saleAmount: "+150cm"
+      saleAmount: "+15cm"
     },
     {
       name: "Antenna Tilt",
@@ -146,17 +146,17 @@ export default function Home() {
     {
       name: "Antenna Roll",
       email: "Offset",
-      saleAmount: "-42cm"
+      saleAmount: "+42cm"
     },
     {
       name: "Antenna Tilt",
       email: "Offset",
-      saleAmount: "+200cm"
+      saleAmount: "+20cm"
     },
     {
       name: "Antenna Obstruction",
       email: "New obstruction",
-      saleAmount: "+200cm"
+      saleAmount: "+20cm"
     },
   ];
 
