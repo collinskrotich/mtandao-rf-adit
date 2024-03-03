@@ -1,14 +1,11 @@
-/** @format */
-'use client';
+'use client'
 
-import PageTitle from "@/components/PageTitle";
-import Image from "next/image";
-import { DollarSign, Users, CreditCard, Activity, SatelliteDish } from "lucide-react";
-import Card, { CardContent, CardProps } from "@/components/Card";
-import BarChart from "@/components/BarChart";
-import SalesCard, { SalesProps } from "@/components/SalesCard";
-import Googlemap from "@/components/Googlemap";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+import PageTitle from '@/components/PageTitle';
+import { SatelliteDish } from 'lucide-react';
+import Card, { CardContent, CardProps } from '@/components/Card';
+import SalesCard, { SalesProps } from '@/components/SalesCard';
+import Googlemap from '@/components/Googlemap';
 
 type Payload = {
   Longitude: number;
@@ -21,7 +18,7 @@ type Payload = {
   Roll: number;
 };
 
-export default function Home() {
+const Home = () => {
   const [payload, setPayload] = useState<Payload[]>([]);
 
   useEffect(() => {
@@ -34,6 +31,8 @@ export default function Home() {
 
     fetchData();
   }, []);
+
+  
 
   const cardData: CardProps[] = [
     {
@@ -67,37 +66,37 @@ export default function Home() {
       icon: SatelliteDish,
     },
   ];
-  
+
   const uesrSalesData: SalesProps[] = [
     {
-      name: "Antenna Obstruction",
-      email: "New obstruction",
-      saleAmount: "+200cm"
+      name: 'Antenna Obstruction',
+      email: 'New obstruction',
+      saleAmount: `+${payload[0]?.['Distance to Obstruction'] || 0} cm`,
     },
     {
-      name: "Antenna Azimuth Offset",
-      email: "Azimuth change",
-      saleAmount: "+150cm"
+      name: 'Antenna Azimuth Offset',
+      email: 'Azimuth change',
+      saleAmount: '+150cm',
     },
     {
-      name: "Antenna Tilt",
-      email: "Offset",
-      saleAmount: "+20cm"
+      name: 'Antenna Tilt',
+      email: 'Offset',
+      saleAmount: '+20cm',
     },
     {
-      name: "Antenna Roll",
-      email: "Offset",
-      saleAmount: "-42cm"
+      name: 'Antenna Roll',
+      email: 'Offset',
+      saleAmount: '-42cm',
     },
     {
-      name: "Antenna Tilt",
-      email: "Offset",
-      saleAmount: "+200cm"
+      name: 'Antenna Tilt',
+      email: 'Offset',
+      saleAmount: '+200cm',
     },
     {
-      name: "Antenna Obstruction",
-      email: "New obstruction",
-      saleAmount: "+200cm"
+      name: 'Antenna Obstruction',
+      email: 'New obstruction',
+      saleAmount: '+200cm',
     },
   ];
 
@@ -120,30 +119,21 @@ export default function Home() {
       <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-2">
         <CardContent>
           <p className="p-4 font-semibold">Map View</p>
-
-          <Googlemap/>
+        <Googlemap />
         </CardContent>
+      
 
-        <CardContent className="flex justify-between gap-4">
-          <section>
-            <p>Recent Alarms</p>
-            <p className="text-sm text-gray-400">
-              There are 24 alarms today.
-            </p>
-          </section>
-
-          {uesrSalesData.map((d, i) => (
-            <SalesCard
-              key={i}
-              email={d.email}
-              name={d.name}
-              saleAmount={d.saleAmount}
-            />
-          ))}
-        </CardContent>
-
-        {/*  */}
+      <section className="grid grid-cols-1 gap-4 transition-all lg:grid-cols-2">
+        <p>Recent Alarms</p>
+        <p className="text-sm text-gray-400">There are 24 alarms today.</p>
+        </section>
+        
+        {uesrSalesData.map((d, i) => (
+          <SalesCard key={i} email={d.email} name={d.name} saleAmount={d.saleAmount} />
+        ))}
       </section>
     </div>
   );
-}
+};
+
+export default Home;
