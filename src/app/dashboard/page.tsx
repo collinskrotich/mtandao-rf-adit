@@ -119,7 +119,16 @@ const Home = () => {
       <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-2">
         <CardContent>
           <p className="p-4 font-semibold">Map View</p>
-        <Googlemap />
+          <Googlemap
+  latitude={-1.49}
+  longitude={36.97}
+  antennaHeight={4}
+  antennaObstruction={157}
+  antennaRoll={212.68}
+  antennaTilt={264.85}
+  antennaAzimuth={183.31}
+/>
+
         </CardContent>
       
 
@@ -127,7 +136,7 @@ const Home = () => {
         <p>Recent Alarms</p>
         <p className="text-sm text-gray-400">There are 24 alarms today.</p>
         </section>
-        
+
         {uesrSalesData.map((d, i) => (
           <SalesCard key={i} email={d.email} name={d.name} saleAmount={d.saleAmount} />
         ))}

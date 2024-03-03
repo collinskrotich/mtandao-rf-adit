@@ -19,15 +19,16 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { Button } from "./ui/button";
-
+import { useState } from "react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  rowNumber?: boolean;
 }
-
 export function DataTable<TData, TValue>({
   columns,
-  data
+  data,
+  rowNumber = false
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -35,6 +36,14 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel()
   });
+
+  const [loading, setLoading] = useState(false); // State to track loading state
+
+  const handleNextPageClick = async () => {
+    setLoading(true); // Set loading state to true
+    await table.nextPage(); // Wait for the next page to be loaded
+    setLoading(false); // Set loading state to false
+  };
 
   return (
     <div>
@@ -60,11 +69,12 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row, index) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
+                  {rowNumber && <TableCell>{index + 1}</TableCell>}
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
@@ -100,10 +110,10 @@ export function DataTable<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={handleNextPageClick} // Use handleNextPageClick function
+          disabled={!table.getCanNextPage() || loading} // Disable button if loading
         >
-          Next
+          {loading ? 'Loading...' : 'Next'}
         </Button>
       </div>
     </div>

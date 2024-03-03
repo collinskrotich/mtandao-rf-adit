@@ -2,10 +2,8 @@
 'use client';
 
 import PageTitle from "@/components/PageTitle";
-import Image from "next/image";
-import { DollarSign, Users, CreditCard, Activity, SatelliteDish } from "lucide-react";
+import { SatelliteDish } from "lucide-react";
 import Card, { CardContent, CardProps } from "@/components/Card";
-import BarChart from "@/components/BarChart";
 import SalesCard, { SalesProps } from "@/components/SalesCard";
 import Googlemap from "@/components/Googlemap";
 import { useEffect, useState } from "react";
@@ -21,49 +19,101 @@ type Payload = {
   Roll: number;
 };
 
+interface MapProps {
+  latitude: number;
+  longitude: number;
+  antennaHeight: number;
+  antennaObstruction: number;
+  antennaRoll: number;
+  antennaTilt: number;
+  antennaAzimuth: number;
+}
+
 export default function Home() {
   const [payload, setPayload] = useState<Payload[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('https://iot-temperature-tag.vercel.app/api/rfaudit');
-      const data = await response.json();
+      const data: Payload[] = await response.json();
+
+      // Sort data by timestamp
+      data.sort((a: Payload, b: Payload) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
       console.log("#######", data);
       setPayload(data);
     };
 
+    // Fetch data initially
     fetchData();
+
+    // Fetch data every 2 seconds
+    const interval = setInterval(fetchData, 2000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
   }, []);
+
+  const formatDate = (timestamp: string): string => {
+    const date = new Date(timestamp);
+    date.setHours(date.getHours() + 3); // Add 3 hours for GMT+3
+  
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      timeZone: 'Africa/Nairobi', // Set the timezone to GMT+3
+    };
+  
+    return date.toLocaleString('en-US', options);
+  };
+  
+  const mapData: MapProps[] = [
+    {
+    latitude: payload[0]?.Latitude,
+    longitude: payload[0]?.Longitude,
+    antennaHeight: payload[0]?.Height,
+    antennaObstruction: payload[0]?.['Distance to Obstruction'],
+    antennaRoll: payload[0]?.Roll,
+    antennaTilt: payload[0]?.Tilt,
+    antennaAzimuth: payload[0]?.Azimuth,
+  }
+]
 
   const cardData: CardProps[] = [
     {
       label: 'Antenna Height',
       amount: `${payload[0]?.Height || 0} cm`,
-      discription: 'NB-IOT Antenna',
+      discription: formatDate(payload[0]?.timestamp || 'Mon, Mar 04, 2024, 06:00:00'),
       icon: SatelliteDish,
     },
     {
       label: 'Antenna Obstruction',
       amount: `${payload[0]?.['Distance to Obstruction'] || 0} cm`,
-      discription: '200% Increase from last reading',
+      discription: formatDate(payload[0]?.timestamp || 'Mon, Mar 04, 2024, 06:00:00'),
       icon: SatelliteDish,
     },
     {
       label: 'Antenna Roll',
       amount: `${payload[0]?.Roll || 0}°`,
-      discription: '',
+      discription: formatDate(payload[0]?.timestamp || 'Mon, Mar 04, 2024, 06:00:00'),
       icon: SatelliteDish,
     },
     {
       label: 'Antenna Tilt',
       amount: `${payload[0]?.Tilt || 0}°`,
-      discription: '20% decrease from last reading',
+      discription: formatDate(payload[0]?.timestamp || 'Mon, Mar 04, 2024, 06:00:00'),
       icon: SatelliteDish,
     },
     {
       label: 'Antenna Azimuth',
       amount: `${payload[0]?.Azimuth || 0}°`,
-      discription: '30 deg off ideal',
+      discription: formatDate(payload[0]?.timestamp || 'Mon, Mar 04, 2024, 06:00:00'),
       icon: SatelliteDish,
     },
   ];
@@ -114,14 +164,19 @@ export default function Home() {
             icon={d.icon}
             label={d.label}
           />
-        ))}
+          ))}
       </section>
 
       <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-2">
         <CardContent>
-          <p className="p-4 font-semibold">Map View</p>
+          
+          <p className="px-4 font-semibold">Map View</p>
+          <p className="px-4 text-xs">{formatDate(payload[0]?.timestamp|| 'Mon, Mar 04, 2024, 06:00:00')}</p>
 
-          <Googlemap/>
+          {mapData.map((data, index) => (
+            <Googlemap key={index} {...data} />
+          ))}
+
         </CardContent>
 
         <CardContent className="flex justify-between gap-4">

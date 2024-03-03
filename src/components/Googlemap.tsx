@@ -1,11 +1,14 @@
-'use client';
-
-import React, { createContext, useState } from 'react';
+import React, { useState } from 'react';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 
-interface MarkerPosition {
-  lat: number;
-  lng: number;
+interface MapProps {
+  latitude: number;
+  longitude: number;
+  antennaHeight: number;
+  antennaObstruction: number;
+  antennaRoll: number;
+  antennaTilt: number;
+  antennaAzimuth: number;
 }
 
 const containerStyle = {
@@ -13,13 +16,13 @@ const containerStyle = {
   height: '500px',
 };
 
-const center = {
-  lat: -1.49, // Replace with your initial latitude , 
-  lng: 36.97, // Replace with your initial longitude
-};
+const Googlemap = ({ latitude, longitude, antennaHeight, antennaObstruction, antennaRoll, antennaTilt, antennaAzimuth }: MapProps) => {
+  const [selectedMarker, setSelectedMarker] = useState<{ lat: number, lng: number } | null>(null);
 
-const Googlemap = () => {
-  const [selectedMarker, setSelectedMarker] = useState<MarkerPosition | null>(null);
+  const center = {
+    lat: latitude,
+    lng: longitude
+  };
 
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}>
@@ -39,17 +42,17 @@ const Googlemap = () => {
             onCloseClick={() => setSelectedMarker(null)}
           >
             <>
-            <div>
-              <h2 className='font-bold'>Arduino Antenna sec 2</h2>
-              <br/>
-              <p>Latitude: -1.49</p>
-              <p>Longitude: -36.97</p>
-              <p>Antenna height: 4cm</p>
-              <p>Antenna obstruction: 157cm</p>
-              <p>Antenna Roll: 212.68&deg;</p>
-              <p>Antenna Tilt: 264.85&deg;</p>
-              <p>Antenna Azimuth: 183.31&deg;</p>
-            </div>
+              <div>
+                <h2 className='font-bold'>Arduino Antenna sec 2</h2>
+                <br />
+                <p>Latitude: {latitude}</p>
+                <p>Longitude: {longitude}</p>
+                <p>Antenna Height: {antennaHeight} cm</p>
+                <p>Antenna Obstruction: {antennaObstruction} cm</p>
+                <p>Antenna Roll: {antennaRoll}&deg;</p>
+                <p>Antenna Tilt: {antennaTilt}&deg;</p>
+                <p>Antenna Azimuth: {antennaAzimuth}&deg;</p>
+              </div>
             </>
           </InfoWindow>
         )}

@@ -1,195 +1,87 @@
-/**
- * eslint-disable @next/next/no-img-element
- *
- * @format
- */
+'use client';
 
-/** @format */
-"use client";
-
+import { useEffect, useState } from "react";
+import PageTitle from "@/components/PageTitle";
 import { DataTable } from "@/components/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
-import React from "react";
-import PageTitle from "@/components/PageTitle";
 
-type Props = {};
-type Payment = {
-  name: string;
+type Payload = {
+  Longitude: number;
+  Latitude: number;
   timestamp: string;
-  height: string;
-  obstruction: string;
-  roll: string;
-  tilt: string;
-  azimuth: string;
+  'Distance to Obstruction': number;
+  Azimuth: number;
+  Height: number;
+  Tilt: number;
+  Roll: number;
 };
 
-const columns: ColumnDef<Payment>[] = [
+const columns: ColumnDef<Payload>[] = [
   {
-    accessorKey: "name",
-    header: "Antenna Name",
-    cell: ({ row }) => {
-      return (
-        <div className="flex gap-2 items-center">
-
-          <p>{row.getValue("name")} </p>
-        </div>
-      );
-    }
+    accessorKey: "no",
+    header: "Row Number",
+    cell: ({ row }) => row.index + 1, // Increment the row number starting from 1
   },
   {
     accessorKey: "timestamp",
     header: "TimeStamp"
   },
   {
-    accessorKey: "height",
+    accessorKey: "Height",
     header: "Height"
   },
   {
-    accessorKey: "obstruction",
+    accessorKey: 'Distance to Obstruction',
     header: "Obstruction"
   },
   {
-    accessorKey: "roll",
+    accessorKey: "Roll",
     header: "Roll"
   },
   {
-    accessorKey: "tilt",
+    accessorKey: "Tilt",
     header: "Tilt"
   },
   {
-    accessorKey: "azimuth",
+    accessorKey: "Azimuth",
     header: "Azimuth"
   },
 ];
 
-const timestampx = Date.now();
-const date = new Date(timestampx).toLocaleString();
-
-const data: Payment[] = [
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-  {
-    name: "Arduino device",
-    timestamp: date,
-    height: "4cm",
-    obstruction: "157cm",
-    roll: "212.68°",
-    tilt:"264.85°",
-    azimuth:"183.31°",
-  },
-];
+type Props = {};
 
 export default function UsersPage({}: Props) {
+  const [payload, setPayload] = useState<Payload[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('https://iot-temperature-tag.vercel.app/api/rfaudit');
+      const data: Payload[] = await response.json();
+
+      // Sort data by timestamp
+      data.sort((a: Payload, b: Payload) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+      // Limit data to the latest 50 records
+      const latestData = data.slice(0, 200);
+
+      console.log("#######", latestData);
+      setPayload(latestData);
+    };
+
+    // Fetch data initially
+    fetchData();
+
+    // Fetch data every 2 seconds
+    const interval = setInterval(fetchData, 60000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="flex flex-col gap-5  w-full">
       <PageTitle title="Latest Readings" />
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={payload} />
     </div>
   );
 }
