@@ -5,8 +5,10 @@ import PageTitle from "@/components/PageTitle";
 import { SatelliteDish } from "lucide-react";
 import Card, { CardContent, CardProps } from "@/components/Card";
 import SalesCard, { SalesProps } from "@/components/SalesCard";
+import DataPoint from "@/components/LineChart";
 import Googlemap from "@/components/Googlemap";
 import { useEffect, useState } from "react";
+import LineChartX from "@/components/LineChart";
 
 type Payload = {
   Longitude: number;
@@ -27,6 +29,13 @@ interface MapProps {
   antennaRoll: number;
   antennaTilt: number;
   antennaAzimuth: number;
+}
+
+interface DataPoint {
+  name: string;
+  traffic: number;
+  obstr: number;
+  amt: number;
 }
 
 export default function Home() {
@@ -151,6 +160,14 @@ export default function Home() {
     },
   ];
 
+  const data: DataPoint[] = payload.slice(0, 10).map((item, index) => ({
+    name: index.toString(),
+    traffic: item?.['Distance to Obstruction'] * 77, // Calculate traffic as 77 times the obstruction value
+    obstr: item?.['Distance to Obstruction'],
+    amt: item?.['Distance to Obstruction']// Use obstruction value for amt as an example
+  }));
+  
+
   return (
     <div className="flex flex-col gap-5  w-full">
 
@@ -167,7 +184,7 @@ export default function Home() {
           ))}
       </section>
 
-      <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-2">
+      <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-3">
         <CardContent>
           
           <p className="px-4 font-semibold">Map View</p>
@@ -178,11 +195,18 @@ export default function Home() {
           ))}
 
         </CardContent>
+        <CardContent>
+        <p className="px-4 font-semibold">Traffic-Obstruction Analysis</p>
+        <p className="px-4 text-xs">{formatDate(payload[0]?.timestamp|| 'Mon, Mar 04, 2024, 06:00:00')}</p>
+        <LineChartX data={data} />
+
+
+        </CardContent>
 
         <CardContent className="flex justify-between gap-4">
           <section>
-            <p>Recent Alarms</p>
-            <p className="text-sm text-gray-400">
+          <p className="px-4 font-semibold">Recent Alarms</p>
+            <p className="px-4 text-sm text-gray-400">
               There are 24 alarms today.
             </p>
           </section>
