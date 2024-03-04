@@ -127,38 +127,13 @@ export default function Home() {
     },
   ];
   
-  const uesrSalesData: SalesProps[] = [
-    {
-      name: "Antenna Obstruction",
-      email: "New obstruction",
-      saleAmount: "+20cm"
-    },
-    {
-      name: "Antenna Azimuth Offset",
-      email: "Azimuth change",
-      saleAmount: "+15cm"
-    },
-    {
-      name: "Antenna Tilt",
-      email: "Offset",
-      saleAmount: "+20cm"
-    },
-    {
-      name: "Antenna Roll",
-      email: "Offset",
-      saleAmount: "+42cm"
-    },
-    {
-      name: "Antenna Tilt",
-      email: "Offset",
-      saleAmount: "+20cm"
-    },
-    {
-      name: "Antenna Obstruction",
-      email: "New obstruction",
-      saleAmount: "+20cm"
-    },
-  ];
+  const obstructionData = payload.filter(item => item['Distance to Obstruction'] < 5).slice(0, 10);
+
+  const salesCardData = obstructionData.map((item, index) => ({
+    name: "Obstruction!",
+    email: item.timestamp,
+    saleAmount: `+${item['Distance to Obstruction']}cm`
+  }));
 
   const data: DataPoint[] = payload.slice(0, 10).map((item, index) => ({
     name: index.toString(),
@@ -207,17 +182,18 @@ export default function Home() {
           <section>
           <p className="px-4 font-semibold">Recent Alarms</p>
             <p className="px-4 text-sm text-gray-400">
-              There are 24 alarms today.
+              There are 10 alarms today.
             </p>
           </section>
 
-          {uesrSalesData.map((d, i) => (
-            <SalesCard
-              key={i}
-              email={d.email}
-              name={d.name}
-              saleAmount={d.saleAmount}
-            />
+          {salesCardData.map((d, i) => (
+          <SalesCard
+            key={i}
+            name={d.name}
+            email={d.email}
+            
+            saleAmount={d.saleAmount}
+          />
           ))}
         </CardContent>
 
