@@ -127,7 +127,7 @@ export default function Home() {
     },
   ];
   
-  const obstructionData = payload.filter(item => item['Distance to Obstruction'] < 5).slice(0, 10);
+  const obstructionData = payload.filter(item => item['Distance to Obstruction'] < 10).slice(0, 10);
 
   const salesCardData = obstructionData.map((item, index) => ({
     name: "Obstruction!",
@@ -159,7 +159,7 @@ export default function Home() {
           ))}
       </section>
 
-      <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-3">
+      <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-3 sm:grid-cols-1">
         <CardContent>
           
           <p className="px-4 font-semibold">Map View</p>
@@ -170,6 +170,7 @@ export default function Home() {
           ))}
 
         </CardContent>
+
         <CardContent>
         <p className="px-4 font-semibold">Traffic-Obstruction Analysis</p>
         <p className="px-4 text-xs">{formatDate(payload[0]?.timestamp|| 'Mon, Mar 04, 2024, 06:00:00')}</p>

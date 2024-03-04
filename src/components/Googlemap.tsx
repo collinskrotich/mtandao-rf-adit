@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 
 interface MapProps {
@@ -18,18 +18,18 @@ const containerStyle = {
 
 const Googlemap = ({ latitude, longitude, antennaHeight, antennaObstruction, antennaRoll, antennaTilt, antennaAzimuth }: MapProps) => {
   const [selectedMarker, setSelectedMarker] = useState<{ lat: number, lng: number } | null>(null);
+  const [center, setCenter] = useState<{ lat: number, lng: number }>({ lat: latitude, lng: longitude });
 
-  const center = {
-    lat: latitude,
-    lng: longitude
-  };
+  useEffect(() => {
+    setCenter({ lat: latitude, lng: longitude });
+  }, [latitude, longitude]);
 
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}>
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
-        zoom={10} // Adjust the zoom level as needed
+        zoom={12} // Adjust the zoom level as needed
       >
         <Marker
           position={center}
