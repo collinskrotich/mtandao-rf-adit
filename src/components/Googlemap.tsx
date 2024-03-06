@@ -43,7 +43,7 @@ const Googlemap = ({ latitude, longitude, antennaHeight, antennaObstruction, ant
           >
             <>
               <div>
-                <h2 className='font-bold'>Arduino Antenna sec 2</h2>
+                <h2 className='font-bold'>Mtandao Antenna Sec 2</h2>
                 <br />
                 <p>Latitude: {latitude}</p>
                 <p>Longitude: {longitude}</p>

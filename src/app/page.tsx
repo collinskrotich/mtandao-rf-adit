@@ -57,7 +57,7 @@ export default function Home() {
     fetchData();
 
     // Fetch data every 2 seconds
-    const interval = setInterval(fetchData, 2000);
+    const interval = setInterval(fetchData, 1000);
 
     // Clear interval on component unmount
     return () => clearInterval(interval);
