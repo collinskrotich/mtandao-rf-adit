@@ -46,11 +46,7 @@ export default function SideNavbar({}: Props) {
         alt="Image"
         className="absolute top-10 left-4 w-1/2"
       />
-      <Image
-        src={'/saf-logo.png'}
-        width={10}
-        height={20}
-        alt="Safaricom"/>
+
       <Nav
         isCollapsed={mobileWidth ? true : isCollapsed}
         links={[

@@ -127,13 +127,44 @@ export default function Home() {
     },
   ];
   
-  const obstructionData = payload.filter(item => item['Distance to Obstruction'] < 10).slice(0, 10);
+  const obstructionData = payload.filter(item => item['Distance to Obstruction'] < 10).slice(0, 3);
+  //Difference between previous and current
+  const heightData = payload.filter(item => item.Height < 4).slice(0,3); 
 
-  const salesCardData = obstructionData.map((item, index) => ({
-    name: "Obstruction!",
+  let prevAzimuth: number | null = null;
+
+const azimuthData = payload.filter(item => {
+  if (prevAzimuth !== null && Math.abs(item.Azimuth - prevAzimuth) > 120) {
+    return false; // Skip this item
+  }
+
+  prevAzimuth = item.Azimuth;
+  return true; // Include this item
+}).slice(0, 3);
+
+const azimuthSalesCardData = azimuthData.map((item, index) => {
+  const diff = prevAzimuth !== null ? Math.abs(item.Azimuth - prevAzimuth) : 0;
+  prevAzimuth = item.Azimuth;
+  return {
+    name: "Azimuth Alarm!",
     email: item.timestamp,
-    saleAmount: `+${item['Distance to Obstruction']}cm`
+    saleAmount: `Difference: ${diff}`
+  };
+});
+
+  const obstructionSalesCardData = obstructionData.map((item, index) => ({
+    name: "Obstruction Alarm",
+    email: item.timestamp,
+    saleAmount: `Obstruction: +${item['Distance to Obstruction']}cm`
   }));
+
+  const heightCardData = heightData.map((item, index) => ({
+    name: "Antenna Recovery.",
+    email: item.timestamp,
+    saleAmount: `Height to ground +${item.Height} cm`
+  }));
+
+
 
   const data: DataPoint[] = payload.slice(0, 10).map((item, index) => ({
     name: index.toString(),
@@ -179,26 +210,25 @@ export default function Home() {
 
         </CardContent>
 
-        <CardContent className="flex justify-between gap-4">
+        <CardContent className="flex justify-between gap-4 text-xs">
           <section>
           <p className="px-4 font-semibold">Recent Alarms</p>
             <p className="px-4 text-sm text-gray-400">
-              There are 10 alarms today.
-            </p>
+            Showing the last {obstructionSalesCardData.length + azimuthSalesCardData.length} alarms today.
+          </p>
           </section>
 
-          {salesCardData.map((d, i) => (
+          {[...obstructionSalesCardData, ...heightCardData, ...azimuthSalesCardData].map((d, i) => (
           <SalesCard
             key={i}
             name={d.name}
             email={d.email}
-            
             saleAmount={d.saleAmount}
+            
           />
-          ))}
-        </CardContent>
+        ))}
+      </CardContent>
 
-        {/*  */}
       </section>
     </div>
   );
