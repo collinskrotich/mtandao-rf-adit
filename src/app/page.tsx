@@ -7,8 +7,9 @@ import Card, { CardContent, CardProps } from "@/components/Card";
 import SalesCard, { SalesProps } from "@/components/SalesCard";
 import DataPoint from "@/components/LineChart";
 import Googlemap from "@/components/Googlemap";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LineChartX from "@/components/LineChart";
+import useSWR from 'swr';
 
 type Payload = {
   Longitude: number;
@@ -39,30 +40,17 @@ interface DataPoint {
 }
 
 export default function Home() {
-  const [payload, setPayload] = useState<Payload[]>([]);
+  const { data: payload, error } = useSWR('https://iot-temperature-tag.vercel.app/api/rfaudit', async (url) => {
+    const response = await fetch(url);
+    const data = await response.json();
+    // Sort data by timestamp
+    data.sort((a:Payload, b:Payload) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    return data;
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch('https://iot-temperature-tag.vercel.app/api/rfaudit');
-      const data: Payload[] = await response.json();
-
-      // Sort data by timestamp
-      data.sort((a: Payload, b: Payload) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-
-      console.log("#######", data);
-      setPayload(data);
-    };
-
-    // Fetch data initially
-    fetchData();
-
-    // Fetch data every 2 seconds
-    const interval = setInterval(fetchData, 1000);
-
-    // Clear interval on component unmount
-    return () => clearInterval(interval);
-  }, []);
-
+  if (error) return <div>Error loading data</div>;
+  if (!payload) return <div>Loading...</div>;
+  
   const formatDate = (timestamp: string): string => {
     const date = new Date(timestamp);
     date.setHours(date.getHours() + 3); // Add 3 hours for GMT+3
@@ -164,8 +152,6 @@ const azimuthSalesCardData = azimuthData.map((item, index) => {
     saleAmount: `Height to ground +${item.Height} cm`
   }));
 
-
-
   const data: DataPoint[] = payload.slice(0, 10).map((item, index) => ({
     name: index.toString(),
     traffic: item?.['Distance to Obstruction'] * 77, // Calculate traffic as 77 times the obstruction value
@@ -175,6 +161,7 @@ const azimuthSalesCardData = azimuthData.map((item, index) => {
   
 
   return (
+   
     <div className="flex flex-col gap-5  w-full">
 
       <PageTitle title="Dashboard" />
@@ -190,7 +177,7 @@ const azimuthSalesCardData = azimuthData.map((item, index) => {
           ))}
       </section>
 
-      <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-3 sm:grid-cols-1">
+      <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-2 sm:grid-cols-1">
         <CardContent>
           
           <p className="px-4 font-semibold">Map View</p>
@@ -209,12 +196,13 @@ const azimuthSalesCardData = azimuthData.map((item, index) => {
 
 
         </CardContent>
+        </section>
 
         <CardContent className="flex justify-between gap-4 text-xs">
           <section>
           <p className="px-4 font-semibold">Recent Alarms</p>
             <p className="px-4 text-sm text-gray-400">
-            Showing the last {obstructionSalesCardData.length + azimuthSalesCardData.length} alarms today.
+            Showing the last {obstructionSalesCardData.length +heightCardData.length+ azimuthSalesCardData.length} alarms today.
           </p>
           </section>
 
@@ -229,7 +217,7 @@ const azimuthSalesCardData = azimuthData.map((item, index) => {
         ))}
       </CardContent>
 
-      </section>
+      
     </div>
   );
 }

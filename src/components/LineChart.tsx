@@ -17,7 +17,7 @@ const CustomLineChart: React.FC<LineChartProps> = ({ data }) => {
       ...point,
       traffic: point.obstr * 2.3, // Calculate traffic value
       name: `${index * 2}`,
-      amt:point.obstr * 2 // Update name if needed
+      amt:point.obstr // Update name if needed
     })).reverse(); 
 
   return (

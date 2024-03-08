@@ -5,7 +5,7 @@ import PageTitle from "@/components/PageTitle";
 import { DataTable } from "@/components/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import ClipLoader from "react-spinners/ClipLoader";
-
+import useSWR from "swr";
 
 type Payload = {
   Longitude: number;
@@ -56,63 +56,69 @@ const override: CSSProperties = {
   borderColor: "limegreen",
 };
 
-type Props = {};
-export default function UsersPage({}: Props) {
+export default function UsersPage() {
   const [payload, setPayload] = useState<Payload[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  let [color, setColor] = useState("#00FF00");
+
+  const fetcher = async (url: string) => {
+    const response = await fetch(url);
+    const data: Payload[] = await response.json();
+    return data;
+  };
+
+  const { data, error } = useSWR('https://iot-temperature-tag.vercel.app/api/rfaudit', fetcher);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true); // Set loading to true when fetching data
-      try {
-        const response = await fetch('https://iot-temperature-tag.vercel.app/api/rfaudit');
-        const data: Payload[] = await response.json();
+    if (data) {
+      setLoading(false);
+      setPayload(data.slice(0, 10)); // Load the first 10 records initially
+    }
+  }, [data]);
 
-        // Sort data by timestamp
-        data.sort((a: Payload, b: Payload) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  if (error) return <div>Error loading data</div>;
 
-        // Limit data to the latest 50 records
-        const latestData = data.slice(0, 200);
-
-        console.log("#######", latestData);
-        setPayload(latestData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false); // Set loading to false after data is fetched
-      }
-    };
-
-    // Fetch data initially
-    fetchData();
-
-    // Fetch data every 2 seconds
-    const interval = setInterval(fetchData, 60000);
-
-    // Clear interval on component unmount
-    return () => clearInterval(interval);
-  }, []);
+  const handleLoadMore = () => {
+    const currentLength = payload?.length;
+    const nextChunk = data?.slice(currentLength, currentLength + 10);
+    setPayload([...(payload || []), ...(nextChunk || [])]);
+  };
 
   return (
     <div className="flex flex-col gap-5  w-full">
       <PageTitle title="Latest Readings" />
       {loading ? (
-        
-                <ClipLoader
-        color="#00FF00"
-        loading={loading}
-        cssOverride={override}
-        size={150}
-        aria-label="Loading Spinner"
-        data-testid="loader"
-      />
-        
-        
+        <ClipLoader
+          color="#00FF00"
+          loading={loading}
+          cssOverride={override}
+          size={150}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
       ) : (
-        <DataTable columns={columns} data={payload} />
+        <>
+          <DataTable columns={columns} data={payload} />
+          <button onClick={handleLoadMore} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
+            Load More
+          </button>
+        </>
       )}
     </div>
   );
 }
 
+
+    // const { data: payload, error } = useSWR<Payload[]>('https://iot-temperature-tag.vercel.app/api/rfaudit', async (url:string) => {
+    //   const response = await fetch(url);
+    //   const data: Payload[] = await response.json();
+    //   // Sort data by timestamp
+    //   data.sort((a: Payload, b: Payload) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    //   // Limit data to the latest 50 records
+    //   const latestData = data.slice(0, 200);
+    //   return latestData;
+    // });
+  
+    // if (error) return <div>Error loading data</div>;
+    // if (!payload) return <div>Loading...</div>;
+  
+    // Rest of your component code using the payload data
