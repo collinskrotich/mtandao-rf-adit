@@ -115,13 +115,13 @@ export default function Home() {
     },
   ];
   
-  const obstructionData = payload.filter(item => item['Distance to Obstruction'] < 10).slice(0, 3);
+  const obstructionData = payload.filter((item: Payload) => item['Distance to Obstruction'] < 10).slice(0, 3);
   //Difference between previous and current
-  const heightData = payload.filter(item => item.Height < 4).slice(0,3); 
+  const heightData = payload.filter((item: Payload)=> item.Height < 4).slice(0,3); 
 
   let prevAzimuth: number | null = null;
 
-const azimuthData = payload.filter(item => {
+const azimuthData = payload.filter((item: Payload) => {
   if (prevAzimuth !== null && Math.abs(item.Azimuth - prevAzimuth) > 120) {
     return false; // Skip this item
   }
@@ -130,7 +130,7 @@ const azimuthData = payload.filter(item => {
   return true; // Include this item
 }).slice(0, 3);
 
-const azimuthSalesCardData = azimuthData.map((item, index) => {
+const azimuthSalesCardData = azimuthData.map((item: Payload, index: number) => {
   const diff = prevAzimuth !== null ? Math.abs(item.Azimuth - prevAzimuth) : 0;
   prevAzimuth = item.Azimuth;
   return {
@@ -140,19 +140,19 @@ const azimuthSalesCardData = azimuthData.map((item, index) => {
   };
 });
 
-  const obstructionSalesCardData = obstructionData.map((item, index) => ({
+  const obstructionSalesCardData = obstructionData.map((item: Payload, index: number) => ({
     name: "Obstruction Alarm",
     email: item.timestamp,
     saleAmount: `Obstruction: +${item['Distance to Obstruction']}cm`
   }));
 
-  const heightCardData = heightData.map((item, index) => ({
+  const heightCardData = heightData.map((item: Payload, index: number) => ({
     name: "Antenna Recovery.",
     email: item.timestamp,
     saleAmount: `Height to ground +${item.Height} cm`
   }));
 
-  const data: DataPoint[] = payload.slice(0, 10).map((item, index) => ({
+  const data: DataPoint[] = payload.slice(0, 10).map((item: Payload, index: number) => ({
     name: index.toString(),
     traffic: item?.['Distance to Obstruction'] * 77, // Calculate traffic as 77 times the obstruction value
     obstr: item?.['Distance to Obstruction'],
