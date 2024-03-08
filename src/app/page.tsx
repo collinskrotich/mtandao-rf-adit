@@ -40,16 +40,31 @@ interface DataPoint {
 }
 
 export default function Home() {
-  const { data: payload, error } = useSWR('https://iot-temperature-tag.vercel.app/api/rfaudit', async (url) => {
-    const response = await fetch(url);
-    const data = await response.json();
-    // Sort data by timestamp
-    data.sort((a:Payload, b:Payload) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-    return data;
-  });
+  const [payload, setPayload] = useState<Payload[]>([]);
 
-  if (error) return <div>Error loading data</div>;
-  if (!payload) return <div>Loading...</div>;
+  const cachedData = useRef<Payload[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('https://iot-temperature-tag.vercel.app/api/rfaudit');
+      const data: Payload[] = await response.json();
+
+      // Sort data by timestamp
+      data.sort((a: Payload, b: Payload) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+      console.log("#######", data);
+      setPayload(data);
+    };
+
+    // Fetch data initially
+    fetchData();
+
+    // Fetch data every 2 seconds
+    const interval = setInterval(fetchData, 500);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
   
   const formatDate = (timestamp: string): string => {
     const date = new Date(timestamp);
