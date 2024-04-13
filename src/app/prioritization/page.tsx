@@ -10,17 +10,17 @@ import pri_data from "../data"
 
 type Payload = {
     SiteName: string;
-    LATITUDE_DEC: number;
-    LONGITUDE_DEC: number;
+    LATITUDE: number;
+    LONGITUDE: number;
     Priority: number;
     'Proposed Action': string;
     Sum_of_Devices: number;
     'SUM of Customer Complaints': number;
-    '3G_PS_Traffic(Divided_by_1024)(GB)': number;
+    '3G_PS_Traffic(GB)': number;
     'DLLoad(%)': number;
-    'VS.AMR.Erlang.BestCell': number;
-    'VS.MaxTCP(dBm)': number;
-    'VS.MeanRTWP(dBm)': number;
+    'VS_AMR_Erlang_BestCell': number;
+    'VS_MaxTCP(dBm)': number;
+    'VS_MeanRTWP(dBm)': number;
     MeanRTWP: number;
     '4G_PS_traffic_Volume(GB)': number;
     'DL_PRB_Usage_Rate(%)': number;
@@ -113,7 +113,7 @@ export default function UsersPage() {
     useEffect(() => {
       if (pri_data) {
         setLoading(false);
-        setPayload(pri_data.slice(0, 20)); // Load the first 10 records initially
+        setPayload(pri_data); // Load the first 10 records initially
       }
     }, []);
   
