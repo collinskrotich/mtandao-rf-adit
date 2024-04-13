@@ -8,15 +8,13 @@ type Props = {};
 
 import {
   LayoutDashboard,
-  UsersRound,
   ChevronRight,
-  RadioTower
+  RadioTower,
+  BringToFront 
 } from "lucide-react";
 
 import { Button } from "./ui/button";
-
 import { useWindowWidth } from "@react-hook/window-size";
-import Image from "next/image";
 
 export default function SideNavbar({}: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -60,6 +58,12 @@ export default function SideNavbar({}: Props) {
             title: "Readings",
             href: "/readings",
             icon: RadioTower,
+            variant: "ghost"
+          },
+          {
+            title: "Prioritization",
+            href: "/prioritization",
+            icon: BringToFront,
             variant: "ghost"
           }
         ]}

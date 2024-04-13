@@ -7,8 +7,8 @@ import SideNavbar from "@/components/SideNavbar";
 
 
 export const metadata: Metadata = {
-  title: "RF Audit By Team Mtandao",
-  description: ""
+  title: "RF Audit By Team Smart RF",
+  description: "Dashboard showing smart RF audit data"
 };
 
 export default function RootLayout({

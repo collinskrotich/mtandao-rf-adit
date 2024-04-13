@@ -91,14 +91,14 @@ export default function UsersPage() {
           color="#00FF00"
           loading={loading}
           cssOverride={override}
-          size={150}
+          size={50}
           aria-label="Loading Spinner"
           data-testid="loader"
         />
       ) : (
         <>
           <DataTable columns={columns} data={payload} />
-          <button onClick={handleLoadMore} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
+          <button onClick={handleLoadMore} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 w-40">
             Load More
           </button>
         </>
