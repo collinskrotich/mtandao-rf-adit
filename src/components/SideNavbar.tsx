@@ -10,7 +10,8 @@ import {
   LayoutDashboard,
   ChevronRight,
   RadioTower,
-  BringToFront 
+  BringToFront,
+  BellRing 
 } from "lucide-react";
 
 import { Button } from "./ui/button";
@@ -64,6 +65,12 @@ export default function SideNavbar({}: Props) {
             title: "Prioritization",
             href: "/prioritization",
             icon: BringToFront,
+            variant: "ghost"
+          },
+          {
+            title: "Alarms",
+            href: "/alarms",
+            icon: BellRing,
             variant: "ghost"
           }
         ]}

@@ -11,6 +11,7 @@ type Payload = {
   Longitude: number;
   Latitude: number;
   timestamp: string;
+  Name_Sector: string;
   'Distance to Obstruction': number;
   Azimuth: number;
   Height: number;
@@ -27,6 +28,10 @@ const columns: ColumnDef<Payload>[] = [
   {
     accessorKey: "timestamp",
     header: "TimeStamp"
+  },
+  {
+    accessorKey: "Name_Sector",
+    header: "Sector Name"
   },
   {
     accessorKey: "Height",

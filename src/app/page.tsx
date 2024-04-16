@@ -20,6 +20,7 @@ type Payload = {
   Height: number;
   Tilt: number;
   Roll: number;
+  Name_Sector: string;
 };
 
 interface MapProps {
@@ -41,27 +42,34 @@ interface DataPoint {
 
 export default function Home() {
   const [payload, setPayload] = useState<Payload[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const cachedData = useRef<Payload[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('https://iot-temperature-tag.vercel.app/api/rfaudit');
-      const data: Payload[] = await response.json();
-
-      // Sort data by timestamp
-      data.sort((a: Payload, b: Payload) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-
-      console.log("#######", data);
-      setPayload(data);
+      setLoading(true); // Set loading to true before fetching data
+      try {
+        const response = await fetch('https://iot-temperature-tag.vercel.app/api/rfaudit');
+        const data: Payload[] = await response.json();
+  
+        // Sort data by timestamp
+        data.sort((a: Payload, b: Payload) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  
+        setPayload(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching data (whether successful or not)
+      }
     };
-
+  
     // Fetch data initially
     fetchData();
-
+  
     // Fetch data every 2 seconds
-    const interval = setInterval(fetchData, 500);
-
+    const interval = setInterval(fetchData, 20000);
+  
     // Clear interval on component unmount
     return () => clearInterval(interval);
   }, []);
@@ -173,13 +181,48 @@ const azimuthSalesCardData = azimuthData.map((item: Payload, index: number) => {
     obstr: item?.['Distance to Obstruction'],
     amt: item?.['Distance to Obstruction']// Use obstruction value for amt as an example
   }));
-  
+
+  const sendEmail = async (loginCode: string) => {
+    try {
+        const response = await fetch('/api/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                from: 'Smart RF Alarms <alarms@smartrf.cloud>',
+                to: ['Collins<kolinsr@gmail.com>', 'Rotich<collinsrotich001@gmail.com>', 'Alarms<alarms@smartrf.cloud>', 'Safaricom<crotich@safaricom.co.ke>'],
+                subject: 'Smart RF Alarms',
+                loginCode: loginCode
+            }),
+        });
+        const data = await response.json();
+        console.log('Email sent:', data);
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+};
+
+const sendEmailIfConditionMet = async () => {
+  if (payload[0]?.['Distance to Obstruction'] > 1 && payload[0]?.['Distance to Obstruction'] < 9) {
+    
+    try {
+      const response = await fetch('/api/send');
+      console.log("response", response);
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  }
+};
+
+// Call the async function
+sendEmailIfConditionMet();
+
 
   return (
    
     <div className="flex flex-col gap-5  w-full">
-
-      <PageTitle title="Smart RF Dashboard" />
+    <PageTitle title={`Smart RF Dashboard ${payload[0]?.Name_Sector || ""}`} /> 
       <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-5">
         {cardData.map((d, i) => (
           <Card
@@ -226,13 +269,10 @@ const azimuthSalesCardData = azimuthData.map((item: Payload, index: number) => {
             key={i}
             name={d.name}
             email={d.email}
-            saleAmount={d.saleAmount}
-            
+            saleAmount={d.saleAmount}         
           />
         ))}
-      </CardContent>
-
-      
+      </CardContent>    
     </div>
   );
 }

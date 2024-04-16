@@ -8,6 +8,7 @@ import {
     Link,
     Preview,
     Text,
+    Section, Column, Row
   } from "@react-email/components";
   import * as React from "react";
   
@@ -24,10 +25,13 @@ import {
   }: NotionMagicLinkEmailProps) => (
     <Html>
       <Head />
-      <Preview>Smart RF Alarms</Preview>
+      <Preview>Smart RF Alarms. Close obstruction to the antenna. </Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Alarms</Heading>
+          <Heading style={h1}>Smart RF Obstruction Alarm</Heading>
+          <Text>
+            An obstruction alarm triggered this email.
+          </Text>
           <Link
             href="https://smartrf.cloud"
             target="_blank"
@@ -43,6 +47,26 @@ import {
             Or, copy and paste this URL to yor browser
           </Text>
           <code style={code}>{loginCode}</code>
+
+          <Section 
+          style={{
+            marginTop: "14px",
+            marginBottom: "16px",
+          }}>
+      <Row>
+        <Column>Obstruction Alarm</Column>
+        <Column>3 alarms</Column>
+      </Row>
+      <Row>
+        <Column>Antenna Recovery</Column>
+        <Column>3 alarms</Column>
+      </Row>
+      <Row>
+        <Column>Azimuth Alarm</Column>
+        <Column>3 alarms</Column>
+      </Row>
+    </Section>
+
           <Text
             style={{
               ...text,
@@ -64,18 +88,19 @@ import {
             Hint: You can unsubscribe from Smart RF alarms in → Alarms → Unsubscribe.
           </Text>
           <Img
-            src="saf-logo.png"
-            width="32"
-            height="32"
+            src="https://i.postimg.cc/DZddyYmz/SAF-MAIN-LOGO.png"
+            width="128"
+            height="96"
             alt="Safaricom"
           />
           <Text style={footer}>
             <Link
               href="https://smartrf.cloud"
+
               target="_blank"
               style={{ ...link, color: "#898989" }}
             >
-              Smart RF. The Climb is Over.
+              Smart RF Audit. The Climb is Over.
             </Link>
             by Safaricom PLC
             <br />

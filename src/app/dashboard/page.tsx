@@ -20,19 +20,24 @@ type Payload = {
 
 const Home = () => {
   const [payload, setPayload] = useState<Payload[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('https://iot-temperature-tag.vercel.app/api/rfaudit');
-      const data = await response.json();
-      console.log("#######", data);
-      setPayload(data);
+      setLoading(true); // Set loading to true before fetching data
+      try {
+        const response = await fetch('https://iot-temperature-tag.vercel.app/api/rfaudit');
+        const data = await response.json();
+        setPayload(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching data (whether successful or not)
+      }
     };
-
+  
     fetchData();
   }, []);
-
-  
 
   const cardData: CardProps[] = [
     {
