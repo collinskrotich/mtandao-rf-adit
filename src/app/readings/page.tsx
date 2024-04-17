@@ -76,9 +76,11 @@ export default function UsersPage() {
   useEffect(() => {
     if (data) {
       setLoading(false);
-      setPayload(data.slice(0, 10)); // Load the first 10 records initially
+      const sortedData = data.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      setPayload(sortedData.slice(0, 10)); // Load the first 10 records initially
     }
   }, [data]);
+  
 
   if (error) return <div>Error loading data</div>;
 
@@ -87,6 +89,8 @@ export default function UsersPage() {
     const nextChunk = data?.slice(currentLength, currentLength + 10);
     setPayload([...(payload || []), ...(nextChunk || [])]);
   };
+
+  console.log(payload);
 
   return (
     <div className="flex flex-col gap-5  w-full">
@@ -103,27 +107,14 @@ export default function UsersPage() {
       ) : (
         <>
           <DataTable columns={columns} data={payload} />
-          <button onClick={handleLoadMore} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 w-40">
-            Load More
-          </button>
+          <div className="flex justify-end">
+            <button onClick={handleLoadMore} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 w-40">
+              Load More
+            </button>
+          </div>
         </>
       )}
     </div>
   );
 }
 
-
-    // const { data: payload, error } = useSWR<Payload[]>('https://iot-temperature-tag.vercel.app/api/rfaudit', async (url:string) => {
-    //   const response = await fetch(url);
-    //   const data: Payload[] = await response.json();
-    //   // Sort data by timestamp
-    //   data.sort((a: Payload, b: Payload) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-    //   // Limit data to the latest 50 records
-    //   const latestData = data.slice(0, 200);
-    //   return latestData;
-    // });
-  
-    // if (error) return <div>Error loading data</div>;
-    // if (!payload) return <div>Loading...</div>;
-  
-    // Rest of your component code using the payload data
