@@ -67,12 +67,12 @@ export default function SideNavbar({}: Props) {
             icon: BringToFront,
             variant: "ghost"
           },
-          {
-            title: "Alarms",
-            href: "/alarms",
-            icon: BellRing,
-            variant: "ghost"
-          }
+          // {
+          //   title: "Alarms",
+          //   href: "/alarms",
+          //   icon: BellRing,
+          //   variant: "ghost"
+          // }
         ]}
       />
     </div>

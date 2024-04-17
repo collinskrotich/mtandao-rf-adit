@@ -114,7 +114,7 @@ export default function UsersPage() {
   
     return (
       <div className="flex flex-col gap-5 w-full">
-        <PageTitle title="Alarms" />
+        <PageTitle title="Site Prioritization" />
         <DataTable columns={columns} data={payload} />
       </div>
     );
