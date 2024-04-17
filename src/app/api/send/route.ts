@@ -20,6 +20,8 @@ export async function GET() {
             'Maingi<jmaingi@safaricom.co.ke>',
             'Tabby<tngure@safaricom.co.ke>',
             'Dan<dootieno@safaricom.co.ke>',
+            'Simon<mbogosimon@gmail.com>',
+            'Ben<bjumah2003@gmail.com>',
             ],
             subject: 'Smart RF Alarms',
             react: NotionMagicLinkEmail({loginCode: "www.smartrf.cloud"})

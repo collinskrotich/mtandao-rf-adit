@@ -30,10 +30,7 @@ type Payload = {
   
 
 const columns: ColumnDef<Payload>[] = [
-    {
-        accessorKey: "Priority",
-        header: "Priority"
-      },
+
     {
       accessorKey: "SiteName",
       header: "Site Name"
@@ -47,56 +44,52 @@ const columns: ColumnDef<Payload>[] = [
       header: "Longitude"
     },
     {
+      accessorKey: "Priority",
+      header: "Computed Priority"
+    },
+    {
       accessorKey: "Proposed Action",
-      header: "Proposed Action"
+      header: "Proposed Solution"
     },
     {
       accessorKey: "Sum_of_Devices",
-      header: "Sum of Devices"
+      header: "No of Customers"
     },
     {
       accessorKey: "SUM of Customer Complaints",
-      header: "SUM of Customer Complaints"
+      header: "No of Customer Complaints"
     },
-    {
-      accessorKey: "3G_PS_Traffic(GB)",
-      header: "3G PS Traffic (GB)"
-    },
+    // {
+    //   accessorKey: "3G_PS_Traffic(GB)",
+    //   header: "3G Traffic (GB)"
+    // },
     {
       accessorKey: "DLLoad(%)",
-      header: "DL Load (%)"
+      header: "3G Utilization(%)"
     },
     {
       accessorKey: "VS_AMR_Erlang_BestCell",
-      header: "VS AMR Erlang Best Cell"
-    },
-    {
-      accessorKey: "VS_MaxTCP(dBm)",
-      header: "VS Max TCP (dBm)"
+      header: "Voice Traffic"
     },
     {
       accessorKey: "VS_MeanRTWP(dBm)",
-      header: "VS Mean RTWP (dBm)"
+      header: "Interference (dBm)"
     },
-    {
-      accessorKey: "MeanRTWP",
-      header: "Mean RTWP"
-    },
-    {
-      accessorKey: "4G_PS_traffic_Volume(GB)",
-      header: "4G PS Traffic Volume (GB)"
-    },
+    // {
+    //   accessorKey: "4G_PS_traffic_Volume(GB)",
+    //   header: "4G Traffic(GB)"
+    // },
     {
       accessorKey: "DL_PRB_Usage_Rate(%)",
-      header: "DL PRB Usage Rate (%)"
+      header: "4G Utilization(%)"
     },
     {
       accessorKey: "PS_Traffic",
-      header: "PS Traffic"
+      header: "Data Traffic"
     },
     {
       accessorKey: "Weighted_Value",
-      header: "Weighted Value"
+      header: "Score"
     }
 ];
 
